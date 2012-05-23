@@ -9,7 +9,7 @@ class VgYoutube
   def initialize(url=nil, options={})
     object = YouTubeIt::Client.new({})
     @url = url
-    @video_id = @url.query_param('v')
+    @video_id = @url.query_param('v') || extract_video_id(@url)
     @details = object.video_by(@video_id)
     @details.instance_variable_set(:@noembed, false)
     raise if @details.blank?
@@ -60,4 +60,9 @@ class VgYoutube
     "Youtube"
   end
 
+  protected
+
+  def extract_video_id(url)
+    return url.match(/(http:\/\/youtu.be\/)(\w+)/)[2]
+  end
 end
